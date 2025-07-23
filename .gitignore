@@ -1,0 +1,24 @@
+# Ignore terraform directories everywhere
+**/.terraform/
+# Ignore Terraform local state and provider binaries
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+
+
+# Ignore terraform logs
+crash.log
+*.log
+
+
+# Node modules for your Next.js app
+my-app/node_modules/
+
+# VSCode settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
