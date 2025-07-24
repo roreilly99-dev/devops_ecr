@@ -46,7 +46,8 @@ jobs:
 
             - name: Terraform Destroy (Main)
               working-directory: ./infrastructure/main
-              run: terraform destroy
+              if: github.ref == 'refs/heads/main'
+              run: terraform destroy -auto-approve
     
     docker: 
         name: Build and Push to ECR 
