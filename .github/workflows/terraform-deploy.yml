@@ -1,0 +1,90 @@
+name: Terrform Deployment
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+env:
+
+
+jobs:
+    terraform:
+        name: "Terraform Plan & Apply"
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+                aws-region: eu-west-1
+
+            - name: SetUp Terraform
+              uses: hashicorp/setup-terraform@v3
+              with: 
+                terraform_version: '1.x'
+            
+            - name: Terraform Init (Main)
+              working-directory: ./infrastructure/main
+              run: terraform init
+
+            - name: Terraform Validate (Main)
+              working-directory: ./infrastructure/main
+              run: terraform validate
+
+            - name: Terraform Plan (Main)
+              working-directory: ./infrastructure/main
+              run: terraform plan
+
+            - name: Terraform Apply (Main)
+              working-directory: ./infrastructure/main
+              if: github.ref == 'refs/heads/main'
+              run: terraform apply -auto-approve
+    
+    docker: 
+        name: Build and Push to ECR 
+        runs-on: ubuntu-latest
+        steps:
+            - name: Build and Push Docker Image
+              uses: actions/checkout@v3
+
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with: 
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID}}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+                aws-region: eu-west-1
+
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Get Terraform ECR URI
+              id: tf-output
+              run: |
+                cd ./infrastructure/main
+                ECR_REPO=$(terraform output -raw repository_url)
+                echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
+
+            - name: Build, Tag, and Push the Image to Amazon ECR
+              id: build-image
+              env: 
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
+                ECR_REPOSITORY: ${{ env.ECR_REPO}}
+                IMAGE_TAG: ${{ github.sha }}
+              run: |
+                # Navigate into the folder that contains Dockerfile
+                cd my-app
+
+                # Build the Docker image
+                docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+
+                # Push the image to ECR
+                docker push $ECR_REPOSITORY:$IMAGE_TAG

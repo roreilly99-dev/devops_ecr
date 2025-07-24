@@ -52,3 +52,7 @@ module "ecs" {
   target_group_arn    = module.alb.target_group_arn
   listener_dependency = module.alb
 }
+
+output "ecr_url"{
+    value = module.ecr.repository_url
+}
