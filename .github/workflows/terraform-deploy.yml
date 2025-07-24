@@ -52,7 +52,7 @@ jobs:
               id: tf-output
               run: |
                 cd ./infrastructure/main
-                ECR_REPO=$(terraform output -raw repository_url)
+                ECR_REPO=$(terraform output -raw ecr_url)
                 echo "ECR_REPO=$ECR_REPO" >> $GITHUB_ENV
             
             - name: Build, Tag, and Push the Image to Amazon ECR
