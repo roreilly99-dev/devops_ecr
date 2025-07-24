@@ -70,4 +70,9 @@ jobs:
 
                 # Push the image to ECR
                 docker push $ECR_REPOSITORY:$IMAGE_TAG
+
+            - name: Destroy Terraform Infrastructure
+              working-directory: ./infrastructure/main
+              if: github.ref == 'refs/heads/main'
+              run: terraform destroy -auto-approve
     
