@@ -4,7 +4,7 @@ terraform {
         bucket = "ecr-devops-state"
         key = "main/terraform.tfstate"
         region = "eu-west-1"
-        profile = "terraform-user"
+        #profile = "terraform-user"
         dynamodb_table = "ecr-devops-state-locking"
         encrypt = true
     }
@@ -18,7 +18,7 @@ terraform {
 
 provider "aws"{
     region = "eu-west-1"
-    profile = "terraform-user"
+    # profile = "terraform-user"
     default_tags{
 
     }
