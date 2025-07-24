@@ -43,11 +43,6 @@ jobs:
               working-directory: ./infrastructure/main
               if: github.ref == 'refs/heads/main'
               run: terraform apply -auto-approve
-
-            - name: Terraform Destroy (Main)
-              working-directory: ./infrastructure/main
-              if: github.ref == 'refs/heads/main'
-              run: terraform destroy -auto-approve
     
     docker: 
         name: Build and Push to ECR 
@@ -68,6 +63,11 @@ jobs:
             - name: Login to Amazon ECR
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Set up Terraform
+              uses: hashicorp/setup-terraform@v3
+              with:
+                terraform_version: '1.x'
 
             - name: Get Terraform ECR URI
               id: tf-output
