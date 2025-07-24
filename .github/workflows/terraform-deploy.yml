@@ -47,6 +47,7 @@ jobs:
     docker: 
         name: Build and Push to ECR 
         runs-on: ubuntu-latest
+        needs: terraform
         steps:
             - name: Build and Push Docker Image
               uses: actions/checkout@v3
