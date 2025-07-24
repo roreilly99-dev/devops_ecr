@@ -69,6 +69,10 @@ jobs:
               with:
                 terraform_version: '1.x'
 
+            - name: Terraform Init
+              working-directory: ./infrastructure/main
+              run: terraform init -reconfigure
+
             - name: Get Terraform ECR URI
               id: tf-output
               run: |
