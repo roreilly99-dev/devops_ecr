@@ -15,6 +15,9 @@ crash.log
 
 # Node modules for your Next.js app
 my-app/node_modules/
+my-app/.next/
+my-app/.env.local
+my-app/.env
 
 # VSCode settings
 .vscode/
@@ -22,3 +25,26 @@ my-app/node_modules/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+backend/.venv
+backend/venv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+backend/coverage.xml
+
+# IDE
+.idea/
+*.swp
+*.swo
