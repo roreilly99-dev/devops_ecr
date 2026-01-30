@@ -29,6 +29,11 @@ module "ecr"{
     name = "nextjs-app"
 }
 
+module "ecr_backend"{
+    source = "./modules/ecr-backend"
+    name = "perth-events"
+}
+
 module "vpc" {
     source = "./modules/vpc"
 }
@@ -55,4 +60,8 @@ module "ecs" {
 
 output "ecr_url"{
     value = module.ecr.repository_url
+}
+
+output "ecr_backend_url"{
+    value = module.ecr_backend.repository_url
 }
